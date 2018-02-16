@@ -45,6 +45,9 @@ def handle_messages(m, vk_user, bot, chat_id, mainmessage=None):
         group = api.groups.getById(group_ids=str(m['uid'])[1:])[0]
         user = {'first_name': group['name'], 'last_name': None}
 
+    if check_notification(m):
+        return
+
     if 'body' in m and not 'attachment' in m and not 'geo' in m and not 'fwd_messages' in m:
         data = add_user_info(m, user["first_name"], user["last_name"])[:-1] + add_reply_info(m)
         bot.send_message(chat_id, data, parse_mode='HTML', disable_web_page_preview=False,
