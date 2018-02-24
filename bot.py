@@ -550,23 +550,29 @@ def send_sticker(message, userid, group, forward_messages=None):
     Image.open(file).save("{}.png".format(file))
     openedfile = open('{}.png'.format(file), 'rb')
     files = {'file': openedfile}
-    fileonserver = ujson.loads(requests.post(api.photos.getMessagesUploadServer()['upload_url'],
+    fileonserver = ujson.loads(requests.post(api.docs.getUploadServer(type='graffiti')['upload_url'],
                                              files=files).text)
-    attachment = api.photos.saveMessagesPhoto(server=fileonserver['server'], photo=fileonserver['photo'],
-                                              hash=fileonserver['hash'])
+    attachment = api.docs.save(file=fileonserver['file'])
+
     if group:
         if message.caption:
-            api.messages.send(chat_id=userid, message=message.caption, attachment=attachment[0]['id'],
+            api.messages.send(chat_id=userid, message=message.caption, 
+                              attachment=str(attachment[0]['owner_id']) + '_' + str(
+                                  attachment[0]['did']),
                               forward_messages=forward_messages)
         else:
-            api.messages.send(chat_id=userid, attachment=attachment[0]['id'],
-                              forward_messages=forward_messages)
+            api.messages.send(chat_id=userid, attachment=str(attachment[0]['owner_id']) + '_' + str(
+                              attachment[0]['did']), forward_messages=forward_messages)
     else:
         if message.caption:
-            api.messages.send(user_id=userid, message=message.caption, attachment=attachment[0]['id'],
+            api.messages.send(user_id=userid, message=message.caption,
+                              attachment=str(attachment[0]['owner_id']) + '_' + str(
+                                  attachment[0]['did']),
                               forward_messages=forward_messages)
         else:
-            api.messages.send(user_id=userid, attachment=attachment[0]['id'],
+            api.messages.send(user_id=userid,
+                              attachment='doc' + str(attachment[0]['owner_id']) + '_' + str(
+                                  attachment[0]['did']),
                               forward_messages=forward_messages)
     openedfile.close()
     os.remove('{}.png'.format(file))
