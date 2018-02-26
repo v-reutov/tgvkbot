@@ -419,6 +419,10 @@ def vk_sender(message, method):
                 info.append('0')
                 info.append('0')
             form_request(message, method, info)
+        else:
+            bot.reply_to(message, '*Сообщение не было отправлено: выберите диалог или ответье на сообщение*',
+                     parse_mode='Markdown').wait()
+
 
 
 def audio_title_creator(message, performer=None, title=None):
