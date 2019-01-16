@@ -143,3 +143,6 @@ credentials.py
 
 # PyCharm project
 .idea
+
+# VS code 
+.vscode
