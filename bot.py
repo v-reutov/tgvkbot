@@ -551,7 +551,7 @@ def send_sticker(message, userid, group, forward_messages=None):
     api = vk.API(session, v=VK_API_VERSION)
     file = wget.download(
         FILE_URL.format(token, bot.get_file(getattr(message, filetype).file_id).wait().file_path))
-    Image.open(file).save("{}.png".format(file))
+    Image.open(file).convert('RGBA').save("{}.png".format(file))
     openedfile = open('{}.png'.format(file), 'rb')
     files = {'file': openedfile}
     fileonserver = ujson.loads(requests.post(api.docs.getUploadServer(type='graffiti')['upload_url'],
